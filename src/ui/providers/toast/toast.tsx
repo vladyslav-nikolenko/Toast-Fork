@@ -1,17 +1,20 @@
-import { createContext, useCallback, useContext } from 'react';
-import { ToastType } from './types';
-
-interface ToastProps {
-  renderToast: (type: ToastType, message: string) => void;
-}
+import { createContext, useCallback, useContext, useState } from 'react';
+import { ToastInfo, ToastProps, ToastType } from './types';
+import { createPortal } from 'react-dom';
+import { Toast } from '@/components/Toast';
 
 const ToastContext = createContext<ToastProps | null>(null);
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
-  // eslint-disable-next-line
+  const [toastInfo, setToastInfo] = useState<ToastInfo | undefined>(undefined);
+
   const renderToast = useCallback((type: ToastType, message: string) => {
-    console.error('TODO: implement the renderToast(type, message)');
+    setToastInfo({ type, message });
   }, []);
+
+  const onCloseToast = () => {
+    setToastInfo(undefined);
+  };
 
   return (
     <ToastContext.Provider
@@ -19,6 +22,15 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         renderToast,
       }}>
       {children}
+      {toastInfo &&
+        createPortal(
+          <div className='absolute bottom-5 right-5'>
+            <Toast close={onCloseToast} type={toastInfo?.type}>
+              {toastInfo?.message}
+            </Toast>
+          </div>,
+          document.body,
+        )}
     </ToastContext.Provider>
   );
 }

@@ -14,11 +14,11 @@ const inter = Inter({
 function MainApp({ Component, pageProps }: AppProps) {
   return (
     <div className={`${inter.variable} font-inter antialiased bg-slate-100 text-slate-600`}>
-      <React.StrictMode>
-        <Providers>
-          <Component {...pageProps} />
-        </Providers>
-      </React.StrictMode>
+      {/* <React.StrictMode> */}
+      <Providers>
+        <Component {...pageProps} />
+      </Providers>
+      {/* </React.StrictMode> */}
     </div>
   );
 }
